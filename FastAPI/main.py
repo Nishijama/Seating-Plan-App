@@ -1,7 +1,7 @@
 # packages
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Optional, Annotated, List
+from typing import Annotated
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 import json
@@ -25,13 +25,14 @@ class Attendee(BaseModel):
     so: int | None
     table: int = 0
 
+
 class UpdateAttendee(BaseModel):
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    family: Optional[str] = None
-    tier: Optional[int] = None
-    so: Optional[int] = None
-    table: Optional[int] = None
+    first_name: str | None = None
+    last_name: str | None = None
+    family: str | None = None
+    tier: int | None = None
+    so: int | None = None
+    table: int | None = None
 
 class AttendeeModel(Attendee):
     id: int
@@ -42,8 +43,8 @@ class AttendeeModel(Attendee):
 class UpdateAttendeeModel(UpdateAttendee):
     id: int
 
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True
 
 # SET UP DATABASE CONNECTION
 def get_db():
@@ -69,8 +70,8 @@ async def read_attendees(id: int, db: db_dependency, skip: int = 0, limit: int =
     return attendee
 
 
-@app.put("/attendees/{id}/", response_model=AttendeeModel)
-async def update_attendee(id: int, attendee_update: UpdateAttendeeModel, db: Session = Depends(db_dependency)):
+@app.put("/attendees/{id}/", response_model=UpdateAttendee)
+async def update_attendee(id: int, attendee_update: UpdateAttendee, db: db_dependency):
     db_attendee = db.query(models.Attendee).filter(models.Attendee.id == id).first()
     
     if not db_attendee:
@@ -86,7 +87,7 @@ async def update_attendee(id: int, attendee_update: UpdateAttendeeModel, db: Ses
     
     return db_attendee
 
-@app.get("/attendees/", response_model=List[AttendeeModel])
+@app.get("/attendees/", response_model=list[AttendeeModel])
 async def read_attendees(db: db_dependency, skip: int = 0, limit: int = 100):
     attendees = db.query(models.Attendee).offset(skip).limit(limit).all()
     return attendees

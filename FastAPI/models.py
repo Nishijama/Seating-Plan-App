@@ -10,4 +10,4 @@ class Attendee(Base):
     tier = Column(Integer)
     table = Column(Integer)
     so = Column(Integer)
-    attending = Column(Boolean)
+
