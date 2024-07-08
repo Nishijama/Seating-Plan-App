@@ -40,12 +40,6 @@ class AttendeeModel(Attendee):
     class Config:
         orm_mode = True
 
-class UpdateAttendeeModel(UpdateAttendee):
-    id: int
-
-    # class Config:
-    #     orm_mode = True
-
 # SET UP DATABASE CONNECTION
 def get_db():
     db = SessionLocal()
