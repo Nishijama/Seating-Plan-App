@@ -86,6 +86,7 @@ async def read_attendees(db: db_dependency, skip: int = 0, limit: int = 100):
     attendees = db.query(models.Attendee).offset(skip).limit(limit).all()
     return attendees
 
+
 @app.post("/attendees/", response_model=AttendeeModel)
 async def create_attendees(attendee: AttendeeModel, db: db_dependency):
     db_attendee = models.Attendee(**attendee.model_dump())
